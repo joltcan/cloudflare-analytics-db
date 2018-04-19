@@ -25,10 +25,8 @@ I use this to populate my [Grafana](https://grafana.org) dashboard with Cloudfla
 # Grafana
 ## Postgres read permissions
 ```
-CREATE USER grafanaread WITH ENCRYPTED PASSWORD 'rRK93cLzhLgs6obWY1fj';
+CREATE USER grafanaread WITH ENCRYPTED PASSWORD '<grafana read-only pw>';
 GRANT USAGE ON SCHEMA public to grafanaread;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO grafanaread;
-
-GRANT CONNECT ON DATABASE cf_api to grafanaread;
-GRANT SELECT ON ALL TABLES IN SCHEMA cf_api TO readonly;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO grafanareader;
+GRANT SELECT ON cf_api TO grafanareader;
 ```
