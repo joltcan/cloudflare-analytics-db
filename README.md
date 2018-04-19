@@ -6,7 +6,7 @@ I use this to populate my [Grafana](https://grafana.org) dashboard with Cloudfla
 * Install [psycopg2](http://initd.org/psycopg/): ```sudo pip install psycopg2-binary```
 * ```cp .env-sample .env``` or set those as environment variables in your shell before running
 * Fill in the secrets (or set those as environment variables in your shell before running)
-* put it in your crontab: ```@hourly cd ${HOME}/src/cloudflare-analytics-db/ ; . .env && sleep $((RANDOM \% 10 * 60)) ; python ./cloudflare-analytics-db.py```. This will sleep for some random minutes before running (\% is escaped due to how cron handle variables).
+* put it in your crontab: ```@hourly cd $HOME/src/cloudflare-analytics-db/ ; . ./.env ; sleep $((RANDOM \% 10 * 60)) ; python ./cloudflare-analytics-db.py```. This will sleep for some random minutes before running (\% is escaped due to how cron handle variables).
 
 # Installation
 * Install PostgreSQL ```sudo apt install postres``` or run it with [docker].(https://hub.docker.com/_/postgres/)
