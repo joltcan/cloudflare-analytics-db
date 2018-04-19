@@ -20,13 +20,51 @@ I use this to populate my [Grafana](https://grafana.org) dashboard with Cloudfla
 
 # Todo
 - [ ] Add the Grafana dashboard code here as example.
-- [ ] Screenshots, because why not!
+- [X] Add Grafana postgresql code.
+- [X] Screenshots, because why not!
+
+# Screenshot
+
+![Grafana Cloudlfare image](https://i.imgur.com/zcUFae0.png)
 
 # Grafana
-## Postgres read permissions
+## Postgres read permission for Grafana user
+```sudo -u postgres psql postgres```
 ```
 CREATE USER grafanaread WITH ENCRYPTED PASSWORD '<grafana read-only pw>';
 GRANT USAGE ON SCHEMA public to grafanaread;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO grafanareader;
 GRANT SELECT ON cf_api TO grafanareader;
 ```
+
+## Grafana dashboard panel
+The query used for a panel needs to use the PostgreSQL database, so set that up as a source first.
+After that, you can c'n'p the following into a table or graph, and hopefully you should get something useful back!
+
+### Tables
+```sql
+SELECT 
+  data->>'until' as time,
+  cast(data->'bandwidth'->>'all' as integer) as "Total",
+  cast(data->'bandwidth'->>'cached' as integer) as "Cached"
+FROM 
+  cf_api 
+WHERE
+  to_timestamp(data->>'until', 'YYYY-MM-DD HH24:MI:SS') between ($__timeFrom() at time zone 'UTC') AND ($__timeTo() at time zone 'UTC')
+```
+
+The reason it looks over-complicated is that the Cloudflare data is in UTC (a.k.a. Zulu) timezone, but you are most likely not, and I didn't find an override in the Grafana postgres templates. It works great as above in tables, but for graphs, then you need to convert it from UTC to local, and this is why I made this ugly beast below:
+
+### Graphs
+```sql
+SELECT 
+  (to_timestamp(data->>'until', 'YYYY-MM-DD HH24:MI:SS')::timestamptz::timestamp) as time,
+  cast(data->'bandwidth'->>'all' as integer) as "Total",
+  cast(data->'bandwidth'->>'cached' as integer) as "Cached"
+FROM 
+  cf_api 
+WHERE
+  to_timestamp(data->>'until', 'YYYY-MM-DD HH24:MI:SS') between ($__timeFrom() at time zone 'UTC') AND ($__timeTo() at time zone 'UTC')
+```
+
+Anyway. It works!
