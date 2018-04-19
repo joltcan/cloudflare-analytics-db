@@ -5,7 +5,7 @@ I use this to populate my [Grafana](https://grafana.org) dashboard with Cloudfla
 # TL;DR
 * ```cp .env-sample .env``` or set those as environment variables in your shell before running
 * Fill in the secrets (or set those as environment variables in your shell before running)
-* put it in your crontab, "@hourly cd ${HOME}/src/cloudflare-analytics-db/ && source .env && ./cloudflare-analytics-db.py"
+* put it in your crontab, "@hourly cd ${HOME}/src/cloudflare-analytics-db/ && source .env && python ./cloudflare-analytics-db.py"
 
 # Installation
 * Install PostgreSQL ```sudo apt install postres``` or run it with [docker].(https://hub.docker.com/_/postgres/)
