@@ -74,4 +74,7 @@ WHERE
   to_timestamp(data->>'until', 'YYYY-MM-DD HH24:MI:SS') between ($__timeFrom() at time zone 'UTC') AND ($__timeTo() at time zone 'UTC')
 ```
 
-Anyway. It works
+Anyway. It works!
+
+# Example dashboard
+Please see the [cloudflare-dashboard.json](cloudflare-dashboard.json) file. It's very bare, but a good starting point.
