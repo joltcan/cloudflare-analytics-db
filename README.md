@@ -19,7 +19,7 @@ I use this to populate my [Grafana](https://grafana.org) dashboard with Cloudfla
 * Postgres? I like it, and also, it handles JSON splendidly!
 
 # Todo
-- [ ] Add the Grafana dashboard code here as example.
+- [X] Add the Grafana dashboard code here as example.
 - [X] Add Grafana postgresql code.
 - [X] Screenshots, because why not!
 
@@ -40,6 +40,13 @@ GRANT SELECT ON cf_api TO grafanareader;
 ## Grafana dashboard panel
 The query used for a panel needs to use the PostgreSQL database, so set that up as a source first.
 After that, you can c'n'p the following into a table or graph, and hopefully you should get something useful back!
+
+### What fields can I use?
+The fields that are returned by the Cloudflare API is available at the [Zone Analytics Dashboard](https://api.cloudflare.com/#zone-analytics-dashboard) page.
+
+The way that PostreSQL handles JSON formatting means that you use need to CAST the data into integer format to have it work in graphs, like so: cast(data->'bandwidth'->>'all' as integer).
+
+To get a field, like requests all, you have to specify an array with "->" and the value (to string) with ->>, and hence: ``` cast(data->'requests'->>'all' as integer) as "Total Requests"```.
 
 ### Tables
 ```sql
@@ -67,4 +74,4 @@ WHERE
   to_timestamp(data->>'until', 'YYYY-MM-DD HH24:MI:SS') between ($__timeFrom() at time zone 'UTC') AND ($__timeTo() at time zone 'UTC')
 ```
 
-Anyway. It works!
+Anyway. It works
