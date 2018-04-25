@@ -71,6 +71,13 @@ try:
 
         r = requests.get(cf_api_url + '/' + cf_site_id + '/analytics/dashboard', headers=cf_headers,params=cf_params)
         cf_data = r.json()
+
+        try:
+            cf_data = r.json()
+        except:
+            print("No valid JSON in reply from CF, exiting.")
+            sys.exit(1)
+
         if cf_data['success']:
             entrycounter = 0
             for entry in cf_data['result']['timeseries']:
